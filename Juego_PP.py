@@ -12,7 +12,7 @@ azul     = ( 0   , 0   , 200 )
 amarillo = ( 255 , 255 , 0   )
 
 # -VENTANA
-tamaño    = ancho,alto = 300,500            # Tamaño de la pantalla
+tamaño    = ancho,alto = 1000,500            # Tamaño de la pantalla
 pantalla  = pygame.display.set_mode(tamaño) # Se cre una pantall con pygame con el tamaño prediseñado
 pygame.display.set_caption("Gravedad")      # Se le pone un nombre al borde de la pantalla
 
@@ -36,8 +36,8 @@ class Rectangulo:
     def __init__ ( self, x , y , anchura , altura , color ):
         self.x       = x
         self.y       = y
-        self.xc      = x + anchura # Contra punto de x,y 
-        self.yc      = y+altura 
+        self.xc      = 0 
+        self.yc      = 0 
         self.anchura = anchura
         self.altura  = altura
         self.color   = color
@@ -48,14 +48,16 @@ class Rectangulo:
 
 
 # -DATOS
-movimiento_AB_circulo    = 0 # Movimiento de arriba - abajo
-movimiento_ID_circulo    = 0 # Movimiento de izquierda - derecha
-movimiento_AB_rectangulo = 0 # Movimiento de arriba - abajo
+movimiento_AB_circulo      = 0 # Movimiento de arriba - abajo
+movimiento_ID_circulo      = 0 # Movimiento de izquierda - derecha
+movimiento_AB_rectangulo   = 0 # Movimiento de arriba - abajo
+movimiento_AB_rectangulo_2 = 0 # Movimiento de arriba - abajo
 
 
 # -OBJETOS
-balon     = Pelota     ( 150 , 20 , 20 , rojo )
-jugador_1 = Rectangulo ( 20, 50, 10, 50, negro )
+balon     = Pelota     ( 150 , 20 , 20 , blanco)
+jugador_1 = Rectangulo ( 20  , 50 , 10 , 50 , blanco )
+jugador_2 = Rectangulo ( 980 , 50 , 10 , 50 , blanco )
 
 
 # -BUCLÉ 
@@ -104,69 +106,116 @@ while True:
 
             # MOVIMIENTO DEL RECTANGULO
             elif accion.key == pygame.K_w:
-                movimiento_AB_rectangulo = -10
+                movimiento_AB_rectangulo = -20
                 jugador_1.y += movimiento_AB_rectangulo
             elif accion.key == pygame.K_s:
-                movimiento_AB_rectangulo = 10
+                movimiento_AB_rectangulo = 20
                 jugador_1.y += movimiento_AB_rectangulo
+            elif accion.key == pygame.K_o:
+                movimiento_AB_rectangulo_2 = -20
+                jugador_2.y += movimiento_AB_rectangulo_2
+            elif accion.key == pygame.K_l:
+                movimiento_AB_rectangulo_2 =  20
+                jugador_2.y += movimiento_AB_rectangulo_2
+                
 
-        """
         # Si alguna tecla se deja de presionar
         elif accion.type == pygame.KEYUP:
-            if accion.key == pygame.K_DOWN:
-                movimiento_AB_circulo = 0
-            if accion.key == pygame.K_UP:
-                movimiento_AB_circulo = 0
-            if accion.key == pygame.K_LEFT:
-                movimiento_ID_circulo = 0
-            if accion.key == pygame.K_RIGHT:
-                movimiento_ID_circulo = 0
-        """
+            #if accion.key == pygame.K_DOWN:
+             #   movimiento_AB_circulo = 0
+           # if accion.key == pygame.K_UP:
+            #    movimiento_AB_circulo = 0
+           # if accion.key == pygame.K_LEFT:
+            #    movimiento_ID_circulo = 0
+           # if accion.key == pygame.K_RIGHT:
+            #    movimiento_ID_circulo = 0
+            if accion.key == pygame.K_w:
+                movimiento_AB_rectangulo = 0
+            if accion.key == pygame.K_s:
+                movimiento_AB_rectangulo = 0
+            if accion.key == pygame.K_o:
+                movimiento_AB_rectangulo_2 = 0
+            if accion.key == pygame.K_l:
+                movimiento_AB_rectangulo_2 = 0
+    # ------------------------------------------------------
     # Muestra la pantalla con fondo de color
-    pantalla.fill(blanco)
+    # ------------------------------------------------------
+    pantalla.fill(negro)
+    # ------------------------------------------------------
+    # Muestra la lina divisora
+    # ------------------------------------------------------
+    xi = ancho/2
+    yi = 0
+    xf = xi
+    yf = alto
+    medio = pygame.draw.line ( pantalla , blanco , ( xi , yi ) , ( xf , yf ) , 1 )
 
+    # ------------------------------------------------------
     # Movimiento en el eje Y
+    # ------------------------------------------------------
     balon.y      += movimiento_AB_circulo
     balon.x      += movimiento_ID_circulo
     jugador_1.y  += movimiento_AB_rectangulo
-    jugador_1.yc  = movimiento_AB_rectangulo + jugador_1.y + jugador_1.altura
+    jugador_2.y  += movimiento_AB_rectangulo_2
+    jugador_1.yc  = jugador_1.y + jugador_1.altura
+    jugador_2.yc  = jugador_2.y + jugador_2.altura
     
     # Movimiento en el eje X
     balon.x += movimiento_ID_circulo
 
+    # ------------------------------------------------------
     # Muestra los objetos 
+    # ------------------------------------------------------
     balon.mostrar()
     jugador_1.mostrar()
+    jugador_2.mostrar()
+    # ------------------------------------------------------
     # Perimetro de la pelota en función de un cuadrado
+    # ------------------------------------------------------
     x_contorno      = balon.x-balon.radio
     y_contorno      = balon.y-balon.radio
     tamaño_contorno = balon.radio*2
-    contorno        = pygame.draw.rect ( pantalla , azul , ( x_contorno , y_contorno , tamaño_contorno , tamaño_contorno ) , 1 )
+    contorno        = pygame.draw.rect ( pantalla , rojo , ( x_contorno , y_contorno , tamaño_contorno , tamaño_contorno ) , 1 )
+    # ------------------------------------------------------
     # Perimetro del rectangulo
-    contorno_jugador_1 = pygame.draw.rect ( pantalla , azul , ( jugador_1.x , jugador_1.y , jugador_1.anchura , jugador_1.altura ) , 1 )
+    # ------------------------------------------------------
+    contorno_jugador_1 = pygame.draw.rect ( pantalla , rojo , ( jugador_1.x , jugador_1.y , jugador_1.anchura , jugador_1.altura ) , 1 )
+    contorno_jugador_2 = pygame.draw.rect ( pantalla , rojo , ( jugador_2.x , jugador_2.y , jugador_2.anchura , jugador_2.altura ) , 1 )
 
+    # ------------------------------------------------------
     # Condición para no rebasar el suelo
+    # ------------------------------------------------------
     # CIRCULO
     if balon.y >= alto:
         movimiento_AB_circulo *= -1
     #RECTANGULO
     if jugador_1.yc >= alto:
-        movimiento_AB_rectangulo *= -1
+        movimiento_AB_rectangulo  = 0 
+    if jugador_2.yc >= alto:
+        movimiento_AB_rectangulo_2  = 0 
 
 
+    # ------------------------------------------------------
     # Condición para no rebasar el techo
+    # ------------------------------------------------------
     # CIRCULO
     if balon.y <= 0:
         movimiento_AB_circulo *= -1
     # RECTANGULO
     if jugador_1.y <= 0:
-        movimiento_AB_rectangulo *= -1
+        movimiento_AB_rectangulo = 0
+    if jugador_2.y <= 0:
+        movimiento_AB_rectangulo_2 = 0
 
+    # ------------------------------------------------------
     # Condición para no rebasar el lado izquierdo 
+    # ------------------------------------------------------
     if balon.x <= 0:
         movimiento_ID_circulo *= -1
 
+    # ------------------------------------------------------
     # Condición para no rebasar el lado derecho 
+    # ------------------------------------------------------
     if balon.x >= ancho:
         movimiento_ID_circulo *= -1
     """
@@ -176,9 +225,16 @@ while True:
         movimiento_AB_circulo *= -1
         movimiento_ID_circulo *= -1
 
+    if contorno.colliderect(contorno_jugador_2):
+        movimiento_AB_circulo *= -1
+        movimiento_ID_circulo *= -1
 
+    # ------------------------------------------------------
     # Manejo de la pantalla
+    # ------------------------------------------------------
     pygame.display.update()
 
+    # ------------------------------------------------------
     # Actualización de la pantalla
+    # ------------------------------------------------------
     pygame.time.delay(30)
