@@ -245,7 +245,7 @@ while True:
         ran_y                = randint(10,400)
         balon.y              = ran_y
         balon.x              = ran_x
-        oportunidades -      = 1
+        oportunidades       -= 1
         velocidad            = randint(10,30)   # La velocidad puede variar entre 10-30
         movimiento_aleatorio = randint(0,1)     # El movimiento puede cambiar
 
